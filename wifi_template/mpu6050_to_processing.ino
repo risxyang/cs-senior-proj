@@ -10,7 +10,9 @@ Adafruit_MPU6050 mpu;
 // Wifi Client
 WiFiClient client;
 const uint16_t port = 8091;
-const char * host = "172.29.21.183";
+const char * host = "172.29.34.245";
+// const char * host = "172.29.21.183";
+// const char * host = "172.29.133.225";
 
 void initWifi() {
   WiFi.mode(WIFI_MODE_STA);
@@ -155,10 +157,10 @@ void loop() {
   Serial.println(" degC");
 
   Serial.println("");
-  delay(500);
+  // delay(500);
 
   client.println(String(g.gyro.x) + "," + String(g.gyro.y) + "," + String(g.gyro.z) + "," + String(a.acceleration.x) + "," + String(a.acceleration.y) + "," + String(a.acceleration.z)+ "," + String(temp.temperature));
 
 
-  delay(50);
+  delay(1);
 }

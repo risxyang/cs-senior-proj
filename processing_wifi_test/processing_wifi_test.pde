@@ -45,8 +45,8 @@ void draw()
   rec_cx += input[3]*10;
   rec_cy += input[4]*10;
   
-  rec_w += (input[0] + input[1] + input[2]) * 100; 
-  rec_h += (input[0] + input[1] + input[2]) * 100; 
+  //rec_w += (input[0] + input[1] + input[2]) * 50; 
+  //rec_h += (input[0] + input[1] + input[2]) * 100; 
   
   rect(rec_cx, rec_cy, rec_w, rec_h);
 }

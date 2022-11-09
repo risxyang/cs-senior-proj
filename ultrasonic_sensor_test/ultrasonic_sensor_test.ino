@@ -3,7 +3,7 @@
 // Wifi Client
 WiFiClient client;
 const uint16_t port = 8091;
-const char * host = "172.29.21.183";
+const char * host = "172.29.133.225";
 
 void initWifi() {
   WiFi.mode(WIFI_MODE_STA);

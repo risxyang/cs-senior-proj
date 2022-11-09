@@ -6,6 +6,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # bind the socket to a public host, and a well-known port
 # s.bind(("172.29.30.152", 8091))
 s.bind(("172.29.21.183", 8091))
+# s.bind(("172.29.133.225", 8091))
 # become a server socket
 s.listen(0)
 
