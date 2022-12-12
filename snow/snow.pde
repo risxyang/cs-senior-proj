@@ -18,7 +18,7 @@ void draw() {
   movie.loadPixels();
   int x = 0;
   int y = 0;
-  int sq_width = 30;
+  int sq_width = 90;
   float r_sum, g_sum, b_sum;
   float r_avg, g_avg, b_avg;
    while (y < movie.height - (sq_width + 1)){
