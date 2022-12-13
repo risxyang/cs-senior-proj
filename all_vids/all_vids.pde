@@ -7,6 +7,7 @@ Movie movie; //currently playing
 float time_at_start;
 float time_now;
 float movie_start;
+int time_elapsed = 0;
 
 boolean leeds = false;
 int single_screen_mode_display_dimensions = 1024;
@@ -89,8 +90,13 @@ void draw() {
   int x = border_x;
   int y = border_y;
   //int sq_width = 30;
-  time_now = millis();
-  int time_elapsed = (int)((time_now - time_at_start) / 1000);
+  
+  //random check for elapsed time
+  float r = random(0,10);
+  if (r < 0.05) {
+    time_elapsed += 1;
+  }
+  //int time_elapsed = (int)((time_now - time_at_start) / 1000);
   int sq_width =  min(1024, max(4, int(pow(2, time_elapsed))));
   println(sq_width);
   //println(sq_width);
@@ -123,6 +129,7 @@ void fill_with_avg_rgb(int x_start, int x_end, int y_start, int y_end) {
         {
           for (int c = y_start; c < y_end; c+=1)
           {
+            //println("hi",movie.height, movie.width);
              int loc = (a + c * movie.width) % (movie.height * movie.width);
              float r = red(movie.pixels[loc]);
              float g = green(movie.pixels[loc]);
