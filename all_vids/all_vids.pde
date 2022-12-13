@@ -49,6 +49,7 @@ void movieEvent(Movie movie) {
 }
 
 void draw() {
+  background(0);
   println(width, height);
   //image(movie, 0, 0);
   //loadPixels();
@@ -79,24 +80,23 @@ void draw() {
   movie.loadPixels();
   println(millis(), movie_start, movie.duration());
   if ((millis() -  movie_start)/1000 >= movie.duration()) {
-    println("finished!");
+    //println("finished!");
     movie_start = millis();
     mode = mode.next();
   }
   int border_x = (width - single_screen_mode_display_dimensions)/2;
   int border_y = (height - single_screen_mode_display_dimensions)/2;
-  println(border_x, border_y);
   int x = border_x;
   int y = border_y;
   //int sq_width = 30;
   time_now = millis();
   int time_elapsed = (int)((time_now - time_at_start) / 1000);
-  int sq_width =  int(2*pow(time_elapsed,2));
+  int sq_width =  min(1024, max(4, int(pow(2, time_elapsed))));
   println(sq_width);
   //println(sq_width);
   
   //PIXELLATE
-   while (y < height - border_y){
+   while (y < height - (border_y+1)){
       x = border_x;
       while(x < width - border_x) {
        fill_with_avg_rgb(x, x+sq_width, y, y+sq_width);
