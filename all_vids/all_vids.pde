@@ -11,6 +11,12 @@ int time_elapsed = 0;
 
 boolean leeds = false;
 int single_screen_mode_display_dimensions = 1024;
+int border_x;
+int border_y;
+int sq_width = 4;
+
+//particles
+Particle[] particles = new Particle[60];
 
 enum Mode {
   RAIN,
@@ -32,7 +38,9 @@ Mode mode;
 
 void setup() {
   //size(2000,1200);
-  fullScreen();
+  fullScreen(P3D);
+  border_x = (width - single_screen_mode_display_dimensions)/2;
+  border_y = (height - single_screen_mode_display_dimensions)/2;
   mode = Mode.RAIN;
   rain_mov = new Movie(this, "rain_20s.mp4");
   fall_mov = new Movie(this, "fall_20s.mp4");
@@ -43,6 +51,11 @@ void setup() {
   time_at_start = millis();
   movie_start = millis();
   //movie.loop();
+  
+  // make particles, a lot of them
+  for (int i = 0; i < particles.length; i++) {
+    particles[i] = new Particle(border_x, width-border_x, border_y, height-border_y);
+  }
 }
 
 void movieEvent(Movie movie) {
@@ -78,15 +91,12 @@ void draw() {
       //println("play snow mov");
       break;
   }
-  movie.loadPixels();
   println(millis(), movie_start, movie.duration());
   if ((millis() -  movie_start)/1000 >= movie.duration()) {
     //println("finished!");
     movie_start = millis();
     mode = mode.next();
   }
-  int border_x = (width - single_screen_mode_display_dimensions)/2;
-  int border_y = (height - single_screen_mode_display_dimensions)/2;
   int x = border_x;
   int y = border_y;
   //int sq_width = 30;
@@ -97,22 +107,40 @@ void draw() {
     time_elapsed += 1;
   }
   //int time_elapsed = (int)((time_now - time_at_start) / 1000);
-  int sq_width =  min(1024, max(4, int(pow(2, time_elapsed))));
+  sq_width =  min(1024, max(4, int(pow(2, time_elapsed))));
   println(sq_width);
   //println(sq_width);
   
   //PIXELLATE
-   while (y < height - (border_y+1)){
+  movie.loadPixels();
+  image(movie, 10000,10000); //render off screen somwhere because apparently this fixes the issue of the movie otherwise not appearing
+   while (y < movie.height && y < height - (border_y+1)){
       x = border_x;
-      while(x < width - border_x) {
+      while(x < movie.width && x < width - border_x) {
        fill_with_avg_rgb(x, x+sq_width, y, y+sq_width);
        x += sq_width;
       }
      y += sq_width;
     }
   updatePixels();
-  
-  delay(10);
+  //show particles
+  camera();
+  for (int i = 0; i < particles.length; i++) {
+      translate(0,0,15);
+      particles[i].update();
+      particles[i].show();
+      camera();
+   }
+  //draw borders again
+  camera();
+  //fill(0);
+  //translate(0,0,50);
+  //rect(0,0, border_x, height);
+  //rect(0,0, width, border_y);
+  //rect(0, height-border_y, width, height);
+  //rect(width-border_x, 0, width, height);
+  //rect(
+ 
 }
 
 void keyPressed() {
