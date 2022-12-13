@@ -4,6 +4,12 @@ Movie fall_mov;
 Movie snow_mov;
 Movie movie; //currently playing
 
+////receive OSC msg
+//import oscP5.*;
+//OscP5 oscP5;
+//String[] messageNames = {"/output_1", "/output_2", "/output_3","/output_4","/output_5","/output_6","/output_7","/output_8","/output_9" }; //message names for each DTW gesture type
+
+
 float time_at_start;
 float time_now;
 float movie_start;
@@ -16,7 +22,7 @@ int border_y;
 int sq_width = 4;
 
 //particles
-Particle[] particles = new Particle[60];
+Particle[] particles = new Particle[100];
 
 enum Mode {
   RAIN,
@@ -103,7 +109,7 @@ void draw() {
   
   //random check for elapsed time
   float r = random(0,10);
-  if (r < 0.05) {
+  if (r < 0.01) {
     time_elapsed += 1;
   }
   //int time_elapsed = (int)((time_now - time_at_start) / 1000);
