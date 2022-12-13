@@ -1,7 +1,7 @@
 int w = 600;
 int h = 600;
 
-int nExpInput = 7;
+int nExpInput = 6;
 int[][] arr = new int[w][nExpInput];
 color[] colors = {color(255,0,0), color(255,100,0), color(255,255,0), color(0,255,0), color(0,0,255), color(255,0,255), color(255,255,255)};
 String[] labels = {"accelerometer X", "accelerometer Y", "accelerometer Z", "gyroscope X", "gyroscope Y", "gyroscope Z", "temperature"};

@@ -154,7 +154,7 @@ void loop() {
   // delay(500);
 
   // client.println(String(g.gyro.x) + "," + String(g.gyro.y) + "," + String(g.gyro.z) + "," + String(a.acceleration.x) + "," + String(a.acceleration.y) + "," + String(a.acceleration.z)+ "," + String(temp.temperature));
-  String msg = String(g.gyro.x) + "," + String(g.gyro.y) + "," + String(g.gyro.z) + "," + String(a.acceleration.x) + "," + String(a.acceleration.y) + "," + String(a.acceleration.z)+ "," + String(temp.temperature);
+  String msg = String(g.gyro.x) + "," + String(g.gyro.y) + "," + String(g.gyro.z) + "," + String(a.acceleration.x) + "," + String(a.acceleration.y) + "," + String(a.acceleration.z);
 
   //only send data when connected
   if(connected){
@@ -163,8 +163,8 @@ void loop() {
     udp.print(msg);  // USES .print INSTEAD OF .write
     udp.endPacket();
   }
-  //Wait for 1 second
-  delay(10);
+
+  // delay(1);
 }
 
 void connectToWiFi(const char * ssid, const char * pwd){
