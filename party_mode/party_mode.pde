@@ -5,6 +5,7 @@ OscP5 oscP5;
 NetAddress dest;
 String[] messageNames = {"/output_1", "/output_2", "/output_3","/output_4","/output_5","/output_6","/output_7","/output_8","/output_9" }; //message names for each DTW gesture type
 int output_state = 0;
+int prev_output_state = 0;
 
 color currColor;
 color prevColor;
@@ -129,6 +130,7 @@ void oscEvent(OscMessage theOscMessage) {
     if (theOscMessage.checkAddrPattern(messageNames[i]) == true) {
        //showMessage(i);
        println(i);
+       prev_output_state = output_state;
        output_state = i;
     }
  }
