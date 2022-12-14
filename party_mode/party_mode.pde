@@ -8,6 +8,8 @@ int output_state = 0;
 
 color currColor;
 color prevColor;
+float gradientCycleHue = 0;
+float circleCycle = 1.0;
 
 ParticleSystem ps;
 
@@ -28,45 +30,94 @@ void draw() {
            //do nothing
            break;
          case 1: 
+           ps.startParticleSystem();
+           ps.addParticle();
            //ps.startParticleSystem();
            //ps.addParticle();
-           println("up");
+           //println("up");
+           gradientCycleHue = (gradientCycleHue + 1)%255;
+           colorMode(HSB);
+           currColor = color(gradientCycleHue, 200, 200);
+           //background(currColor);
+           colorMode(RGB);
            break;
          case 2:
-           currColor = color(0,0,255);
+         println(circleCycle);
+           //currColor = color(0,0,255);
+           if(frameCount % 10 == 0) {
+             circleCycle = max(0.0, circleCycle - 0.1);
+           }
+           colorMode(HSB);
+            currColor = color(hue(currColor), 255, 255.0*circleCycle);
+           colorMode(RGB);
            break;
          case 3:
-           currColor = color(255,0,0);
+           //currColor = color(255,0,0);
+           if(frameCount % 10 == 0) {
+             circleCycle = min(1.0, circleCycle + 0.1);
+           }
+           colorMode(HSB);
+            currColor = color(hue(currColor), 255, 255.0*circleCycle);
+           colorMode(RGB);
            break;
          case 4:
            //currColor = color(0,255,50);
+           //currColor = color(200,50,200);
            ps.startParticleSystem();
            ps.addParticle();
            break;
          case 5:
-           currColor = color((int)random(0,255),(int)random(0,255),(int)random(0,255));
+           //currColor = color((int)random(0,255),(int)random(0,255),(int)random(0,255));
+           //currColor = color(255,150,200);
+           ps.startParticleSystem();
+           ps.addParticle();
+           //delay(50);
            break;
          case 6:
            currColor = color(255,150,255);
            break;
          case 7:
            currColor = color(205,0,205);
+           //currColor = color((int)random(0,255),(int)random(0,255),(int)random(0,255));
+           //delay(250);
            break;
          case 8:
            currColor = color(255,100,0);
            break;
          case 9:
-           currColor = color(255,255,0);
+           currColor = color(255,50,50);
+           ps.startParticleSystem();
+           ps.addParticle();
            break;
        }
        //background(currColor);
-       background(0);
        rectMode(CENTER);
        noStroke();
        if(currColor != -1) {
          fill(currColor,255);
        }
-       rect(width/2,height/2,height,height);
+       if(output_state == 2) {
+         if(circleCycle == 1.0) {
+            background(0);
+         }
+         star(width/2.0, height/2.0, height * circleCycle, height*circleCycle*2, 5);
+        if(circleCycle == 0.0) {
+           circleCycle = 1.0;
+         }
+       }
+       else if(output_state == 3) {
+         if(circleCycle == 0.0) {
+            background(0);
+         }
+         star(width/2.0, height/2.0, height * circleCycle, height*circleCycle*2, 5);
+        if(circleCycle == 1.0) {
+           circleCycle = 0.0;
+         }
+       }
+       else {
+         background(0);
+         rect(width/2,height/2,width,height);
+       }
        ps.run();
        //delay(50);
        
@@ -81,4 +132,39 @@ void oscEvent(OscMessage theOscMessage) {
        output_state = i;
     }
  }
+}
+
+
+
+void keyPressed() {
+  if(key == '1') {
+    output_state = 1;
+  }
+  else if(key == '2') {
+    output_state = 2;
+  }
+  else if(key == '0') {
+    output_state = 0;
+  }
+  else if(key == '3') {
+    output_state = 3;
+  }
+  else if(key == '4') {
+    output_state = 4;
+  }
+  else if(key == '5') {
+    output_state = 5;
+  }
+  else if(key == '6') {
+    output_state = 6;
+  }
+  else if(key == '7') {
+    output_state = 7;
+  }
+  else if(key == '8') {
+    output_state = 8;
+  }
+  else if(key == '9') {
+    output_state = 9;
+  }
 }

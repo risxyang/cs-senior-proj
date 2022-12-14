@@ -34,7 +34,21 @@ class StarParticle extends Particle {
     translate(position.x, position.y);
     rotate(frameCount / 50.0);
     //fill(255,255,0);
-    star(0,0, 30, 60, 5); 
+    if(output_state == 5) {
+      star(0,0, 30, 60, 5); 
+    }
+    else if(output_state == 4) {
+      star(0,0, 5, 10, 5); 
+    }
+    else if(output_state == 1 || output_state == 9) {
+      rotate(-frameCount / 50.0);
+      beginShape();
+      vertex(50, 15);
+      bezierVertex(50, -5, 90, 5, 50, 40);
+      vertex(50, 15);
+      bezierVertex(50, -5, 10, 5, 50, 40);
+      endShape();
+    }
     //line(0, 0, 25, 0);
     popMatrix();
   }

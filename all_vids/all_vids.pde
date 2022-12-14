@@ -115,7 +115,7 @@ void draw() {
       break;
     case LEAVES:
       movie = fall_mov;   
-      movie.volume(0.5);
+      //movie.volume(0.5);
       snow_mov.stop();
       rain_mov.stop();
       fall_mov.play();
@@ -123,7 +123,7 @@ void draw() {
       break;
     case SNOW:
       movie = snow_mov;
-      movie.volume(0.5);
+      //movie.volume(0.5);
       rain_mov.stop();
       fall_mov.stop();
       snow_mov.play();
@@ -193,6 +193,7 @@ void draw() {
         else if(output_state == 1) {
           vol = max(0.0, vol - 0.0001);
         }
+        movie.volume(vol);
         if(output_state == 4) {
            int rind = (int)random(0,sps_array.length);
            sps_array[rind].startParticleSystem();
@@ -229,8 +230,8 @@ void draw() {
   //rect(width-border_x, 0, width, height);
   //rect(
   
-   print(vol);
-   movie.volume(vol);
+   //print(vol);
+   
  
 }
 
