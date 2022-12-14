@@ -85,6 +85,9 @@ class Particle {
       posX = random(l_spawn_bound,r_spawn_bound);
     }
     
+    //sometimes rain falls up
+    posY = max(posY, -100);
+    
     
      switch (mode) {
       case RAIN:
@@ -95,16 +98,21 @@ class Particle {
         w=random(sq_width-2, sq_width+2);
         h=random(10*sq_width, 30*sq_width);
         posY += fallSpeed;
-        
-        switch (output_state) {
-          case 3: //-->
-            //posX += 10;
-          case 4: // <-- 
-            //posX -= 10;
-          case 7:
-            fallSpeed += 2;
-          case 8:
-            fallSpeed -= 2;
+        if(output_state == 0) {
+            if(random(0,10)< 1) {
+                o = max((int)random(40,60), o+0.5);
+            }
+        }
+        else if (output_state == 1) {
+            if(random(0,10)< 1) {
+                o -= 20;
+            }
+        }
+        else if (output_state == 6) {
+            fallSpeed += 0.5;
+        }
+        else if (output_state == 7) {
+            fallSpeed -= 0.5;
         }
         translate(posX, posY);
         break;

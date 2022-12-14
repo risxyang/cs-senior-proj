@@ -27,7 +27,7 @@ int sq_width = 4;
 float canvas_rotation;
 
 //particles
-Particle[] particles = new Particle[100];
+Particle[] particles = new Particle[200];
 
 enum Mode {
   RAIN,
@@ -159,12 +159,12 @@ void draw() {
       //     canvas_rotation -= 0.01;
       //     print(canvas_rotation, "rotating -= 0.1");
       //}
-      if (output_state == 3) {
-         canvas_rotation = min(0.1, canvas_rotation + 0.01);
+      if (output_state == 2) {
+         canvas_rotation = min(0.1, canvas_rotation + 0.00001);
          rotate(canvas_rotation);
       }
-      else if(output_state == 4) {
-        canvas_rotation = max(-0.1, canvas_rotation - 0.01);
+      else if(output_state == 3) {
+        canvas_rotation = max(-0.1, canvas_rotation - 0.00001);
         rotate(canvas_rotation);
       }
         
