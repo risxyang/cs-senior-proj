@@ -28,8 +28,8 @@ void draw() {
            //do nothing
            break;
          case 1: 
-           ps.startParticleSystem();
-           ps.addParticle();
+           //ps.startParticleSystem();
+           //ps.addParticle();
            println("up");
            break;
          case 2:
@@ -39,7 +39,9 @@ void draw() {
            currColor = color(255,0,0);
            break;
          case 4:
-           currColor = color(0,255,50);
+           //currColor = color(0,255,50);
+           ps.startParticleSystem();
+           ps.addParticle();
            break;
          case 5:
            currColor = color((int)random(0,255),(int)random(0,255),(int)random(0,255));

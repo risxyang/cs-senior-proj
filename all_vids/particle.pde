@@ -95,6 +95,17 @@ class Particle {
         w=random(sq_width-2, sq_width+2);
         h=random(10*sq_width, 30*sq_width);
         posY += fallSpeed;
+        
+        switch (output_state) {
+          case 3: //-->
+            //posX += 10;
+          case 4: // <-- 
+            //posX -= 10;
+          case 7:
+            fallSpeed += 2;
+          case 8:
+            fallSpeed -= 2;
+        }
         translate(posX, posY);
         break;
       case LEAVES:
@@ -152,6 +163,8 @@ class Particle {
     blendMode(NORMAL);
 
   }
+  
+ 
   
   //void keyPressed() {
   // time_elapsed+=1;

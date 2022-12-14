@@ -4,10 +4,13 @@ Movie fall_mov;
 Movie snow_mov;
 Movie movie; //currently playing
 
-////receive OSC msg
-//import oscP5.*;
-//OscP5 oscP5;
-//String[] messageNames = {"/output_1", "/output_2", "/output_3","/output_4","/output_5","/output_6","/output_7","/output_8","/output_9" }; //message names for each DTW gesture type
+//receive OSC msg
+import oscP5.*;
+import netP5.*;
+OscP5 oscP5;
+NetAddress dest;
+String[] messageNames = {"/output_1", "/output_2", "/output_3","/output_4","/output_5","/output_6","/output_7","/output_8","/output_9" }; //message names for each DTW gesture type
+int output_state = 0;
 
 
 float time_at_start;
@@ -20,6 +23,8 @@ int single_screen_mode_display_dimensions = 1024;
 int border_x;
 int border_y;
 int sq_width = 4;
+
+float canvas_rotation;
 
 //particles
 Particle[] particles = new Particle[100];
@@ -45,6 +50,10 @@ Mode mode;
 void setup() {
   //size(2000,1200);
   fullScreen(P3D);
+    
+  oscP5 = new OscP5(this,12001);
+  dest = new NetAddress("127.0.0.1",6448);
+  
   border_x = (width - single_screen_mode_display_dimensions)/2;
   border_y = (height - single_screen_mode_display_dimensions)/2;
   mode = Mode.RAIN;
@@ -62,6 +71,9 @@ void setup() {
   for (int i = 0; i < particles.length; i++) {
     particles[i] = new Particle(border_x, width-border_x, border_y, height-border_y);
   }
+  
+  canvas_rotation = 0;
+
 }
 
 void movieEvent(Movie movie) {
@@ -70,7 +82,7 @@ void movieEvent(Movie movie) {
 
 void draw() {
   background(0);
-  println(width, height);
+  //println(width, height);
   //image(movie, 0, 0);
   //loadPixels();
   //println(mode);
@@ -97,7 +109,7 @@ void draw() {
       //println("play snow mov");
       break;
   }
-  println(millis(), movie_start, movie.duration());
+  //println(millis(), movie_start, movie.duration());
   if ((millis() -  movie_start)/1000 >= movie.duration()) {
     //println("finished!");
     movie_start = millis();
@@ -108,13 +120,13 @@ void draw() {
   //int sq_width = 30;
   
   //random check for elapsed time
-  float r = random(0,10);
-  if (r < 0.01) {
+  float r = random(0,10); //!!!
+  if (r < 0.01) {// best 0.01
     time_elapsed += 1;
   }
   //int time_elapsed = (int)((time_now - time_at_start) / 1000);
   sq_width =  min(1024, max(4, int(pow(2, time_elapsed))));
-  println(sq_width);
+  //println(sq_width);
   //println(sq_width);
   
   //PIXELLATE
@@ -129,10 +141,33 @@ void draw() {
      y += sq_width;
     }
   updatePixels();
+  
+      
+        
   //show particles
   camera();
   for (int i = 0; i < particles.length; i++) {
       translate(0,0,15);
+      //println(canvas_rotation);
+      //switch (output_state) {
+      //  case 3: //--> 
+      //    canvas_rotation = min(0.08, canvas_rotation + 0.01);
+      //    canvas_rotation += 0.01;
+      //    print(canvas_rotation, "rotating += 0.1");
+      //  case 4: // <-- 
+      //     canvas_rotation -= max(-0.08, canvas_rotation - 0.01);
+      //     canvas_rotation -= 0.01;
+      //     print(canvas_rotation, "rotating -= 0.1");
+      //}
+      if (output_state == 3) {
+         canvas_rotation = min(0.1, canvas_rotation + 0.01);
+         rotate(canvas_rotation);
+      }
+      else if(output_state == 4) {
+        canvas_rotation = max(-0.1, canvas_rotation - 0.01);
+        rotate(canvas_rotation);
+      }
+        
       particles[i].update();
       particles[i].show();
       camera();
@@ -183,3 +218,14 @@ void fill_with_avg_rgb(int x_start, int x_end, int y_start, int y_end) {
         fill(r_avg, g_avg, b_avg);
         rect(x_start, y_start, x_end - x_start, y_end - y_start);
 }
+
+  //This is called automatically when OSC message is received
+  void oscEvent(OscMessage theOscMessage) {
+   for (int i = 0; i < 9; i++) {
+      if (theOscMessage.checkAddrPattern(messageNames[i]) == true) {
+         //showMessage(i);
+         println(i);
+         output_state = i;
+      }
+   }
+  }
