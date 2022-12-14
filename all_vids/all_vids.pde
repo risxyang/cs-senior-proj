@@ -4,6 +4,10 @@ Movie fall_mov;
 Movie snow_mov;
 Movie movie; //currently playing
 
+//import processing.sound.*;
+//Sound s;
+float vol;
+
 //receive OSC msg
 import oscP5.*;
 import netP5.*;
@@ -84,6 +88,10 @@ void setup() {
   }
   
   tps = new TopParticleSystem(new PVector(width/2, 0));
+  
+  // Create a Sound object for globally controlling the output volume.
+  //s = new Sound(this);
+  vol = 0.5; //sound volume
 
 }
 
@@ -107,6 +115,7 @@ void draw() {
       break;
     case LEAVES:
       movie = fall_mov;   
+      movie.volume(0.5);
       snow_mov.stop();
       rain_mov.stop();
       fall_mov.play();
@@ -114,6 +123,7 @@ void draw() {
       break;
     case SNOW:
       movie = snow_mov;
+      movie.volume(0.5);
       rain_mov.stop();
       fall_mov.stop();
       snow_mov.play();
@@ -158,7 +168,7 @@ void draw() {
   //show particles
   camera();
   for (int i = 0; i < particles.length; i++) {
-      //translate(0,0,15);
+      translate(0,0,55);
          
       if (output_state == 2) {
          canvas_rotation = min(0.1, canvas_rotation + 0.00001);
@@ -177,6 +187,12 @@ void draw() {
       }
       
       if(mode == Mode.RAIN) {
+        if(output_state == 0) {
+             vol = min(1.0, vol + 0.0001);
+        }
+        else if(output_state == 1) {
+          vol = max(0.0, vol - 0.0001);
+        }
         if(output_state == 4) {
            int rind = (int)random(0,sps_array.length);
            sps_array[rind].startParticleSystem();
@@ -212,6 +228,9 @@ void draw() {
   //rect(0, height-border_y, width, height);
   //rect(width-border_x, 0, width, height);
   //rect(
+  
+   print(vol);
+   movie.volume(vol);
  
 }
 

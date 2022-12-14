@@ -141,18 +141,22 @@ class Particle {
         if(output_state == 0) {
             if(random(0,10)< 1) {
                 o = max(255, 1);
+                //vol = min(1.0, vol + 0.05);
             }
         }
         else if (output_state == 1) {
             if(random(0,10)< 1) {
                 o -= 20;
+                //vol = min(0.0, vol - 0.05);
             }
         }
         else if (output_state == 4) { //randomize path more
           int r = (int)random(0,100);
-          if (r < 5) {
-            posX += random(-5,5);
+          if (r < 40) {
+            posX += random(-50,50);
+            posY += random(-50,50);
           }
+          
         }
         else if (output_state == 5) {
           //fallSpeed = 30;
