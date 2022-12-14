@@ -12,12 +12,13 @@ color prevColor;
 ParticleSystem ps;
 
 void setup() {
-  size(600,600);
+  fullScreen();
+  //size(600,600x);
   /* start oscP5, listening for incoming messages at port 12000 */
   oscP5 = new OscP5(this,12001);
   dest = new NetAddress("127.0.0.1",6448);
   background(color(0,0,0));
-  ps = new ParticleSystem(new PVector(width/2, 50));
+  ps = new ParticleSystem(new PVector(width/2, height/2));
 }
 
 void draw() {
@@ -27,12 +28,12 @@ void draw() {
            //do nothing
            break;
          case 1: 
-           currColor = color(255,255,255);
+           ps.startParticleSystem();
+           ps.addParticle();
            println("up");
            break;
          case 2:
            currColor = color(0,0,255);
-           ps.startParticleSystem();
            break;
          case 3:
            currColor = color(255,0,0);
@@ -56,9 +57,14 @@ void draw() {
            currColor = color(255,255,0);
            break;
        }
-       background(currColor);
-       
-       ps.addParticle();
+       //background(currColor);
+       background(0);
+       rectMode(CENTER);
+       noStroke();
+       if(currColor != -1) {
+         fill(currColor,255);
+       }
+       rect(width/2,height/2,height,height);
        ps.run();
        //delay(50);
        

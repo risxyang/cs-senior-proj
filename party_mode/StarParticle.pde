@@ -33,6 +33,7 @@ class StarParticle extends Particle {
     pushMatrix();
     translate(position.x, position.y);
     rotate(frameCount / 50.0);
+    //fill(255,255,0);
     star(0,0, 30, 60, 5); 
     //line(0, 0, 25, 0);
     popMatrix();
