@@ -11,6 +11,7 @@ OscP5 oscP5;
 NetAddress dest;
 String[] messageNames = {"/output_1", "/output_2", "/output_3","/output_4","/output_5","/output_6","/output_7","/output_8","/output_9" }; //message names for each DTW gesture type
 int output_state = 0;
+int prev_output_state = 0;
 
 
 float time_at_start;
@@ -25,6 +26,9 @@ int border_y;
 int sq_width = 4;
 
 float canvas_rotation;
+
+SplashParticleSystem[] sps_array = new SplashParticleSystem[6];
+TopParticleSystem tps;
 
 //particles
 Particle[] particles = new Particle[200];
@@ -73,6 +77,13 @@ void setup() {
   }
   
   canvas_rotation = 0;
+  
+  //sps = new SplashParticleSystem(new PVector(width/2, height-border_y));
+  for (int i = 0; i < sps_array.length; i++) {
+    sps_array[i] = new SplashParticleSystem(new PVector(single_screen_mode_display_dimensions/sps_array.length * i + border_x + (width/24), height-border_y));
+  }
+  
+  tps = new TopParticleSystem(new PVector(width/2, 0));
 
 }
 
@@ -121,7 +132,7 @@ void draw() {
   
   //random check for elapsed time
   float r = random(0,10); //!!!
-  if (r < 0.01) {// best 0.01
+  if (r < 0.1) {// best 0.01
     time_elapsed += 1;
   }
   //int time_elapsed = (int)((time_now - time_at_start) / 1000);
@@ -131,7 +142,7 @@ void draw() {
   
   //PIXELLATE
   movie.loadPixels();
-  image(movie, 10000,10000); //render off screen somwhere because apparently this fixes the issue of the movie otherwise not appearing
+  image(movie, 100000,100000); //render off screen somwhere because apparently this fixes the issue of the movie otherwise not appearing
    while (y < movie.height && y < height - (border_y+1)){
       x = border_x;
       while(x < movie.width && x < width - border_x) {
@@ -147,18 +158,8 @@ void draw() {
   //show particles
   camera();
   for (int i = 0; i < particles.length; i++) {
-      translate(0,0,15);
-      //println(canvas_rotation);
-      //switch (output_state) {
-      //  case 3: //--> 
-      //    canvas_rotation = min(0.08, canvas_rotation + 0.01);
-      //    canvas_rotation += 0.01;
-      //    print(canvas_rotation, "rotating += 0.1");
-      //  case 4: // <-- 
-      //     canvas_rotation -= max(-0.08, canvas_rotation - 0.01);
-      //     canvas_rotation -= 0.01;
-      //     print(canvas_rotation, "rotating -= 0.1");
-      //}
+      //translate(0,0,15);
+         
       if (output_state == 2) {
          canvas_rotation = min(0.1, canvas_rotation + 0.00001);
          rotate(canvas_rotation);
@@ -167,11 +168,41 @@ void draw() {
         canvas_rotation = max(-0.1, canvas_rotation - 0.00001);
         rotate(canvas_rotation);
       }
+      else if(mode == Mode.LEAVES || mode == Mode.SNOW) {
+        if (output_state == 5) {
+          //println("top");
+          tps.startParticleSystem();
+          tps.addParticle();
+        }
+      }
+      
+      if(mode == Mode.RAIN) {
+        if(output_state == 4) {
+           int rind = (int)random(0,sps_array.length);
+           sps_array[rind].startParticleSystem();
+           if(random(0,10)<0.05) {
+             sps_array[rind].addParticle();
+           }
+        }
+        else if(output_state == 5) {
+           int rind = (int)random(0,sps_array.length);
+           sps_array[rind].startParticleSystem();
+           if(random(0,10)<0.5) {
+             sps_array[rind].addParticle();
+           }
+        }
+      }
         
       particles[i].update();
       particles[i].show();
       camera();
    }
+   
+   //sps.run();
+    for (int i = 0; i < sps_array.length; i++) {
+        sps_array[i].run();
+      }
+    tps.run();
   //draw borders again
   camera();
   //fill(0);
@@ -185,7 +216,39 @@ void draw() {
 }
 
 void keyPressed() {
+  if(key == '1') {
+    output_state = 1;
+  }
+  else if(key == '2') {
+    output_state = 2;
+  }
+  else if(key == '0') {
+    output_state = 0;
+  }
+  else if(key == '3') {
+    output_state = 3;
+  }
+  else if(key == '4') {
+    output_state = 4;
+  }
+  else if(key == '5') {
+    output_state = 5;
+  }
+  else if(key == '6') {
+    output_state = 6;
+  }
+  else if(key == '7') {
+    output_state = 7;
+  }
+  else if(key == '8') {
+    output_state = 8;
+  }
+  else if(key == '9') {
+    output_state = 9;
+  }
+  else {
     mode = mode.next();
+  }
 }
 
 void fill_with_avg_rgb(int x_start, int x_end, int y_start, int y_end) {
@@ -215,7 +278,21 @@ void fill_with_avg_rgb(int x_start, int x_end, int y_start, int y_end) {
         b_avg = b_sum / area;
         
         noStroke();
-        fill(r_avg, g_avg, b_avg);
+        
+        float random_static = random(0,100);
+        if (random_static < 0.05) {
+          int rand_grey = (int)random(50,150);
+          fill(rand_grey);
+        }
+        else {
+          fill(r_avg, g_avg, b_avg);
+          if(mode == Mode.SNOW) {
+            if(output_state == 4) {
+              float g = (r_avg + b_avg + g_avg) / 3.0;
+              fill(g);
+            }
+          }
+        }
         rect(x_start, y_start, x_end - x_start, y_end - y_start);
 }
 
@@ -225,6 +302,7 @@ void fill_with_avg_rgb(int x_start, int x_end, int y_start, int y_end) {
       if (theOscMessage.checkAddrPattern(messageNames[i]) == true) {
          //showMessage(i);
          println(i);
+         prev_output_state = output_state;
          output_state = i;
       }
    }
